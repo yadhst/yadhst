@@ -1,0 +1,9 @@
+{
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "css.customData": [".vscode/tailwind.json"],
+    "[prisma]": {
+        "editor.defaultFormatter": "Prisma.prisma"
+    },
+    "codeium.enableCodeLens": false
+}
