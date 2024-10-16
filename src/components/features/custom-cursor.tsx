@@ -54,13 +54,7 @@ export default function CustomCursor() {
         }
 
         function handleMouseInOut(isOut: boolean, e: MouseEvent) {
-            if (
-                e.relatedTarget &&
-                "nodeName" in e.relatedTarget &&
-                typeof e.relatedTarget.nodeName === "string" &&
-                e.relatedTarget.nodeName !== "HTML"
-            )
-                return;
+            if (e.relatedTarget) return;
 
             return cursorOpacity.set(isOut ? 0 : 1);
         }
