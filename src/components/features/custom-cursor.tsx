@@ -28,6 +28,7 @@ export default function CustomCursor() {
             "button",
             "[role='button']",
             "[data-interactive-cc]",
+            "[data-radix-collection-item]",
         ];
 
         const interactiveQuery = interactiveQueries.join(", ");
