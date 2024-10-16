@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
 
+import { Suspense } from "react";
 import type { Metadata } from "next";
 
 import { inter } from "@/components/typography/fonts";
@@ -37,7 +38,9 @@ export default function RootLayout({
                         {children}
                     </main>
                     <StarsBackground />
-                    <CustomCursor />
+                    <Suspense>
+                        <CustomCursor />
+                    </Suspense>
                 </Providers>
             </body>
         </html>
