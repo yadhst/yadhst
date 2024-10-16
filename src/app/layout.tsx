@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import Providers from "./providers";
 import Navbar from "@/components/layouts/navbar";
 import StarsBackground from "@/components/ui/background/stars";
+import CustomCursor from "@/components/features/custom-cursor";
 
 export function generateMetadata(): Metadata {
     return {
@@ -36,6 +37,7 @@ export default function RootLayout({
                         {children}
                     </main>
                     <StarsBackground />
+                    <CustomCursor />
                 </Providers>
             </body>
         </html>
