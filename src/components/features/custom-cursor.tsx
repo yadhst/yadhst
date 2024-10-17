@@ -2,6 +2,7 @@
 
 import { Fragment, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
+import { useEventListener } from "usehooks-ts";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
 const DEFAULT_CURSOR_SIZE = 10;
@@ -35,73 +36,11 @@ export default function CustomCursor() {
         return Boolean(target.closest(interactiveQuery));
     }
 
-    useEffect(() => {
-        function handleMouseHover(isOut: boolean, e: MouseEvent) {
-            if (!isInteractiveTarget(e.target as Element)) return;
-
-            return tailSize.set(
-                isOut ? DEFAULT_TAIL_SIZE : INTERACTIVE_TAIL_SIZE
-            );
-        }
-
-        function handleMousePress(isPressed: boolean, e: MouseEvent) {
-            const previousTailSize = isInteractiveTarget(e.target as Element)
-                ? INTERACTIVE_TAIL_SIZE
-                : DEFAULT_TAIL_SIZE;
-
-            return tailSize.set(
-                isPressed ? PRESSED_TAIL_SIZE : previousTailSize
-            );
-        }
-
-        function handleMouseInOut(isOut: boolean, e: MouseEvent) {
-            if (e.relatedTarget) return;
-
-            return cursorOpacity.set(isOut ? 0 : 1);
-        }
-
-        function handleMouseMove(e: MouseEvent) {
-            cursorX.set(e.clientX);
-            cursorY.set(e.clientY);
-        }
-
-        function handleMouseUp(e: MouseEvent) {
-            handleMousePress(false, e);
-        }
-
-        function handleMouseDown(e: MouseEvent) {
-            handleMousePress(true, e);
-        }
-
-        function handleMouseOver(e: MouseEvent) {
-            handleMouseInOut(false, e);
-            handleMouseHover(false, e);
-        }
-
-        function handleMouseOut(e: MouseEvent) {
-            handleMouseInOut(true, e);
-            handleMouseHover(true, e);
-        }
-
-        window.addEventListener("mousemove", handleMouseMove);
-        window.addEventListener("mouseover", handleMouseOver);
-        window.addEventListener("mouseout", handleMouseOut);
-        window.addEventListener("mouseup", handleMouseUp);
-        window.addEventListener("mousedown", handleMouseDown);
-        return () => {
-            window.removeEventListener("mousemove", handleMouseMove);
-            window.removeEventListener("mouseover", handleMouseOver);
-            window.removeEventListener("mouseout", handleMouseOut);
-            window.removeEventListener("mouseup", handleMouseUp);
-            window.removeEventListener("mousedown", handleMouseDown);
-        };
-    }, [cursorX, cursorY, cursorOpacity, tailSize]);
-
     /** invalidate tail size on route change to prevent bug */
     useEffect(() => {
         const target = document.elementFromPoint(cursorX.get(), cursorY.get());
         if (target) {
-            const invalidatedTailSize = isInteractiveTarget(target as Element)
+            const invalidatedTailSize = isInteractiveTarget(target)
                 ? INTERACTIVE_TAIL_SIZE
                 : DEFAULT_TAIL_SIZE;
 
@@ -110,6 +49,55 @@ export default function CustomCursor() {
 
         return tailSize.set(DEFAULT_TAIL_SIZE);
     }, [pathname, searchParams, tailSize, cursorX, cursorY]);
+
+    function handleMouseHover(isOut: boolean, e: MouseEvent) {
+        if (!isInteractiveTarget(e.target as Element)) return;
+
+        return tailSize.set(isOut ? DEFAULT_TAIL_SIZE : INTERACTIVE_TAIL_SIZE);
+    }
+
+    function handleMousePress(isPressed: boolean, e: MouseEvent) {
+        const previousTailSize = isInteractiveTarget(e.target as Element)
+            ? INTERACTIVE_TAIL_SIZE
+            : DEFAULT_TAIL_SIZE;
+
+        return tailSize.set(isPressed ? PRESSED_TAIL_SIZE : previousTailSize);
+    }
+
+    function handleMouseInOut(isOut: boolean, e: MouseEvent) {
+        if (e.relatedTarget) return;
+
+        return cursorOpacity.set(isOut ? 0 : 1);
+    }
+
+    function handleMouseMove(e: MouseEvent) {
+        cursorX.set(e.clientX);
+        cursorY.set(e.clientY);
+    }
+
+    function handleMouseUp(e: MouseEvent) {
+        handleMousePress(false, e);
+    }
+
+    function handleMouseDown(e: MouseEvent) {
+        handleMousePress(true, e);
+    }
+
+    function handleMouseOver(e: MouseEvent) {
+        handleMouseInOut(false, e);
+        handleMouseHover(false, e);
+    }
+
+    function handleMouseOut(e: MouseEvent) {
+        handleMouseInOut(true, e);
+        handleMouseHover(true, e);
+    }
+
+    useEventListener("mousemove", handleMouseMove);
+    useEventListener("mouseover", handleMouseOver);
+    useEventListener("mouseout", handleMouseOut);
+    useEventListener("mouseup", handleMouseUp);
+    useEventListener("mousedown", handleMouseDown);
 
     return (
         <Fragment>
