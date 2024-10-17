@@ -19,9 +19,18 @@ export default function CustomCursor() {
 
     const smoothOptions = { mass: 0.5, stiffness: 300, damping: 20 };
     const cursorOpacity = useSpring(1, smoothOptions);
-    const tailSize = useSpring(DEFAULT_TAIL_SIZE, smoothOptions);
+    const tailWidth = useSpring(DEFAULT_TAIL_SIZE, smoothOptions);
+    const tailHeight = useSpring(DEFAULT_TAIL_SIZE, smoothOptions);
     const tailX = useSpring(cursorX, smoothOptions);
     const tailY = useSpring(cursorY, smoothOptions);
+
+    function resizeTailWithAspectRatio(
+        width: number,
+        ratio: [number, number] = [1, 1]
+    ) {
+        const h = (width * ratio[1]) / ratio[0];
+        return tailWidth.set(width), tailHeight.set(h);
+    }
 
     function isInteractiveTarget(target: Element) {
         const interactiveQueries = [
@@ -44,16 +53,19 @@ export default function CustomCursor() {
                 ? INTERACTIVE_TAIL_SIZE
                 : DEFAULT_TAIL_SIZE;
 
-            return tailSize.set(invalidatedTailSize);
+            return resizeTailWithAspectRatio(invalidatedTailSize);
         }
 
-        return tailSize.set(DEFAULT_TAIL_SIZE);
-    }, [pathname, searchParams, tailSize, cursorX, cursorY]);
+        return resizeTailWithAspectRatio(DEFAULT_TAIL_SIZE);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [pathname, searchParams]);
 
     function handleMouseHover(isOut: boolean, e: MouseEvent) {
         if (!isInteractiveTarget(e.target as Element)) return;
 
-        return tailSize.set(isOut ? DEFAULT_TAIL_SIZE : INTERACTIVE_TAIL_SIZE);
+        return resizeTailWithAspectRatio(
+            isOut ? DEFAULT_TAIL_SIZE : INTERACTIVE_TAIL_SIZE
+        );
     }
 
     function handleMousePress(isPressed: boolean, e: MouseEvent) {
@@ -61,7 +73,9 @@ export default function CustomCursor() {
             ? INTERACTIVE_TAIL_SIZE
             : DEFAULT_TAIL_SIZE;
 
-        return tailSize.set(isPressed ? PRESSED_TAIL_SIZE : previousTailSize);
+        return resizeTailWithAspectRatio(
+            isPressed ? PRESSED_TAIL_SIZE : previousTailSize
+        );
     }
 
     function handleMouseInOut(isOut: boolean, e: MouseEvent) {
@@ -104,8 +118,8 @@ export default function CustomCursor() {
             <motion.div
                 className="pointer-events-none fixed left-0 top-0 z-[9999] hidden -translate-x-1/2 -translate-y-1/2 rounded-full bg-white mix-blend-difference [@media_(pointer:_fine)]:block"
                 style={{
-                    width: tailSize,
-                    height: tailSize,
+                    width: tailWidth,
+                    height: tailHeight,
                     top: tailY,
                     left: tailX,
                     opacity: cursorOpacity,
