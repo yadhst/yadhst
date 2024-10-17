@@ -16,6 +16,9 @@ const nextConfig = {
             {
                 hostname: "lh3.googleusercontent.com",
             },
+            {
+                hostname: "api.microlink.io",
+            },
         ],
     },
 };

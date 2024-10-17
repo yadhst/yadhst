@@ -1,15 +1,27 @@
 "use client";
 
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
+import Image from "next/image";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEventListener } from "usehooks-ts";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { encode } from "querystring";
+import {
+    motion,
+    useMotionValue,
+    useSpring,
+    AnimatePresence,
+} from "framer-motion";
+
+import { cn } from "@/lib/utils";
 
 const DEFAULT_CURSOR_SIZE = 10;
 const DEFAULT_TAIL_SIZE = DEFAULT_CURSOR_SIZE * 4;
 const INTERACTIVE_TAIL_SIZE = DEFAULT_TAIL_SIZE * 1.6;
 const PRESSED_TAIL_SIZE = DEFAULT_TAIL_SIZE * 1.3;
+const THUMBNAIL_WIDTH = 256;
+const THUMBNAIL_HEIGHT = (THUMBNAIL_WIDTH * 9) / 16; // with ratio 16:9
 
+const MotionImage = motion(Image);
 export default function CustomCursor() {
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -24,25 +36,10 @@ export default function CustomCursor() {
     const tailX = useSpring(cursorX, smoothOptions);
     const tailY = useSpring(cursorY, smoothOptions);
 
-    function resizeTailWithAspectRatio(
-        width: number,
-        ratio: [number, number] = [1, 1]
-    ) {
-        const h = (width * ratio[1]) / ratio[0];
-        return tailWidth.set(width), tailHeight.set(h);
-    }
+    const [thumbnail, setThumbnail] = useState<string | null>(null);
 
-    function isInteractiveTarget(target: Element) {
-        const interactiveQueries = [
-            "a[href]",
-            "button",
-            "[role='button']",
-            "[data-interactive-cc]",
-            "[data-radix-collection-item]",
-        ];
-
-        const interactiveQuery = interactiveQueries.join(", ");
-        return Boolean(target.closest(interactiveQuery));
+    function updateTailSize(width: number, height: number = width) {
+        return tailWidth.set(width), tailHeight.set(height);
     }
 
     /** invalidate tail size on route change to prevent bug */
@@ -53,17 +50,30 @@ export default function CustomCursor() {
                 ? INTERACTIVE_TAIL_SIZE
                 : DEFAULT_TAIL_SIZE;
 
-            return resizeTailWithAspectRatio(invalidatedTailSize);
+            return updateTailSize(invalidatedTailSize);
         }
 
-        return resizeTailWithAspectRatio(DEFAULT_TAIL_SIZE);
+        return updateTailSize(DEFAULT_TAIL_SIZE);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pathname, searchParams]);
 
     function handleMouseHover(isOut: boolean, e: MouseEvent) {
-        if (!isInteractiveTarget(e.target as Element)) return;
+        const target = e.target as Element;
+        if (!target || !isInteractiveTarget(target)) return;
 
-        return resizeTailWithAspectRatio(
+        const anchorEl = target.closest("a[href]") as HTMLAnchorElement;
+        if (anchorEl) {
+            const href = anchorEl.getAttribute("href");
+            if (href?.startsWith("http")) {
+                setThumbnail(isOut ? null : createPreviewLinkURL(href));
+                return updateTailSize(
+                    isOut ? DEFAULT_TAIL_SIZE : THUMBNAIL_WIDTH,
+                    isOut ? DEFAULT_TAIL_SIZE : THUMBNAIL_HEIGHT
+                );
+            }
+        }
+
+        return updateTailSize(
             isOut ? DEFAULT_TAIL_SIZE : INTERACTIVE_TAIL_SIZE
         );
     }
@@ -73,9 +83,7 @@ export default function CustomCursor() {
             ? INTERACTIVE_TAIL_SIZE
             : DEFAULT_TAIL_SIZE;
 
-        return resizeTailWithAspectRatio(
-            isPressed ? PRESSED_TAIL_SIZE : previousTailSize
-        );
+        return updateTailSize(isPressed ? PRESSED_TAIL_SIZE : previousTailSize);
     }
 
     function handleMouseInOut(isOut: boolean, e: MouseEvent) {
@@ -116,7 +124,10 @@ export default function CustomCursor() {
     return (
         <Fragment>
             <motion.div
-                className="pointer-events-none fixed left-0 top-0 z-[9999] hidden -translate-x-1/2 -translate-y-1/2 rounded-full bg-white mix-blend-difference [@media_(pointer:_fine)]:block"
+                className={cn(
+                    "pointer-events-none fixed left-0 top-0 z-[9999] hidden -translate-x-1/2 -translate-y-1/2 [@media_(pointer:_fine)]:block",
+                    !thumbnail && "rounded-full bg-white mix-blend-difference"
+                )}
                 style={{
                     width: tailWidth,
                     height: tailHeight,
@@ -124,7 +135,42 @@ export default function CustomCursor() {
                     left: tailX,
                     opacity: cursorOpacity,
                 }}
-            ></motion.div>
+            >
+                <AnimatePresence>
+                    {!!thumbnail && (
+                        <MotionImage
+                            alt="thumbnail"
+                            src={thumbnail}
+                            width={THUMBNAIL_WIDTH}
+                            height={THUMBNAIL_HEIGHT}
+                            placeholder="blur"
+                            blurDataURL="/images/thumbnail-loading.jpg"
+                            className="pointer-events-none size-full border-border object-cover"
+                            initial={{
+                                opacity: 0,
+                                borderWidth: 0,
+                                borderRadius: "9999px",
+                            }}
+                            animate={{
+                                opacity: 1,
+                                borderWidth: 2,
+                                borderRadius: "calc(var(--radius) - 0.5px)",
+                            }}
+                            exit={{
+                                opacity: 0,
+                                borderWidth: 0,
+                                borderRadius: "9999px",
+                            }}
+                            onError={() =>
+                                setThumbnail(
+                                    (prev) =>
+                                        prev && "/images/thumbnail-error.jpg"
+                                )
+                            }
+                        />
+                    )}
+                </AnimatePresence>
+            </motion.div>
             <motion.div
                 className="pointer-events-none fixed left-0 top-0 z-[9999] hidden -translate-x-1/2 -translate-y-1/2 rounded-full bg-white mix-blend-difference [@media_(pointer:_fine)]:block"
                 style={{
@@ -137,4 +183,36 @@ export default function CustomCursor() {
             ></motion.div>
         </Fragment>
     );
+}
+
+function isInteractiveTarget(target: Element) {
+    const interactiveQueries = [
+        "a[href]",
+        "button",
+        "[role='button']",
+        "[data-interactive-cc]",
+        "[data-radix-collection-item]",
+        "[data-state]",
+    ];
+
+    const interactiveQuery = interactiveQueries.join(", ");
+    return Boolean(target.closest(interactiveQuery));
+}
+
+function createPreviewLinkURL(url: string) {
+    const params = encode({
+        url,
+        screenshot: true,
+        meta: false,
+        waitForTimeout: 8000,
+        embed: "screenshot.url",
+        colorScheme: "dark",
+        ttl: "1d",
+        "viewport.isMobile": true,
+        "viewport.deviceScaleFactor": 1,
+        "viewport.width": THUMBNAIL_WIDTH * 3,
+        "viewport.height": THUMBNAIL_HEIGHT * 3,
+    });
+
+    return `https://api.microlink.io/?${params}`;
 }
