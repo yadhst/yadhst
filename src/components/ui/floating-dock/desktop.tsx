@@ -114,7 +114,7 @@ export function DockDesktopItem({
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
             className={cn(
-                "relative flex aspect-square items-center justify-center rounded-full bg-zinc-400/10 text-foreground/70 dark:bg-foreground/10",
+                "relative flex aspect-square items-center justify-center rounded-full bg-foreground/5 text-foreground/70 backdrop-blur-sm",
                 className
             )}
         >
