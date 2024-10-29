@@ -24,9 +24,15 @@ export default function MessageCard() {
         const referenceElement = document.getElementById(message.referenceId!);
         if (!referenceElement) return null;
 
-        referenceElement.classList.add("bg-brand/10");
-        referenceElement.scrollIntoView({ behavior: "smooth" });
+        const referenceRect = referenceElement.getBoundingClientRect();
+        const referenceTop = referenceRect.top + window.scrollY;
+        const HEADER_HEIGHT = 33; // or get from the dom itself
+        window.scrollTo({
+            top: referenceTop - HEADER_HEIGHT,
+            behavior: "smooth",
+        });
 
+        referenceElement.classList.add("bg-brand/10");
         setTimeout(() => {
             referenceElement.classList.remove("bg-brand/10");
         }, 800);
