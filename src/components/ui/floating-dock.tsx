@@ -12,49 +12,44 @@ import {
 
 import { cn } from "@/lib/utils";
 
-const DockDesktopContext = createContext<{
+const DockContext = createContext<{
     mouseX: MotionValue<number>;
 } | null>(null);
 
-type FloatingDockDesktopProps = {
+type FloatingDockProps = {
     children: React.ReactNode;
     className?: string;
 };
-export function FloatingDockDesktop({
-    children,
-    className,
-}: FloatingDockDesktopProps) {
+export function FloatingDock({ children, className }: FloatingDockProps) {
     const mouseX = useMotionValue(Infinity);
 
     return (
-        <DockDesktopContext.Provider value={{ mouseX }}>
-            <motion.div
-                onMouseMove={(e) => mouseX.set(e.pageX)}
-                onMouseLeave={() => mouseX.set(Infinity)}
-                className={cn(
-                    "hidden h-16 items-end gap-4 rounded-3xl border border-border bg-background px-4 py-3 shadow-lg dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset] md:flex",
-                    className
-                )}
-            >
-                {children}
-            </motion.div>
-        </DockDesktopContext.Provider>
+        <DockContext.Provider value={{ mouseX }}>
+            <div className="fixed inset-x-0 bottom-4 z-50 hidden justify-center lg:flex">
+                <motion.div
+                    onMouseMove={(e) => mouseX.set(e.pageX)}
+                    onMouseLeave={() => mouseX.set(Infinity)}
+                    className={cn(
+                        "flex h-16 items-end gap-4 rounded-3xl border border-border bg-background px-4 py-3 shadow-lg dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]",
+                        className
+                    )}
+                >
+                    {children}
+                </motion.div>
+            </div>
+        </DockContext.Provider>
     );
 }
 
-type DockDesktopItemProps = {
+type DockItemProps = {
     title: string;
     icon: React.ReactNode;
     className?: string;
 };
-export function DockDesktopItem({
-    title,
-    icon,
-    className,
-}: DockDesktopItemProps) {
+export function DockItem({ title, icon, className }: DockItemProps) {
     const ref = useRef<React.ElementRef<"div">>(null);
     const [hovered, setHovered] = useState(false);
-    const context = useContext(DockDesktopContext)!;
+    const context = useContext(DockContext)!;
     const distance = useTransform(context.mouseX, (val) => {
         const bounds = ref.current?.getBoundingClientRect() ?? {
             x: 0,
@@ -140,6 +135,6 @@ export function DockDesktopItem({
     );
 }
 
-export function DockDesktopItemSeparator() {
+export function DockItemSeparator() {
     return <div className="h-5 w-px self-center bg-border"></div>;
 }

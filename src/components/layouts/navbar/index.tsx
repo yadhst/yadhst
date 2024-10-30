@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -12,15 +13,12 @@ import {
 
 import { cn } from "@/lib/utils";
 import ThemeIcon from "./theme-icon";
+import { MobileMenu, MobileMenuItem } from "@/components/ui/mobile-menu";
 import {
-    FloatingDockDesktop,
-    DockDesktopItem,
-    DockDesktopItemSeparator,
-} from "@/components/ui/floating-dock/desktop";
-import {
-    FloatingDockMobile,
-    DockMobileItem,
-} from "@/components/ui/floating-dock/mobile";
+    FloatingDock,
+    DockItem,
+    DockItemSeparator,
+} from "@/components/ui/floating-dock";
 
 export const navigations = [
     {
@@ -45,6 +43,7 @@ export const navigations = [
     },
 ] as const;
 
+/** Floating Dock on Desktop and Menu on Mobile */
 export default function Navbar() {
     const pathname = usePathname();
     const { resolvedTheme, setTheme } = useTheme();
@@ -54,56 +53,40 @@ export default function Navbar() {
     }
 
     return (
-        <div className="fixed bottom-4 right-4 z-50 md:inset-x-1/2">
-            <div className="flex items-center justify-center gap-3 max-md:flex-col-reverse">
-                <FloatingDockDesktop>
-                    {navigations.map(({ title, href, icon }) => (
-                        <Link key={title} href={href} aria-label={title}>
-                            <DockDesktopItem
-                                title={title}
-                                icon={icon}
-                                className={cn(
-                                    pathname === href && "ring-brand ring-2"
-                                )}
-                            />
-                            <span className="sr-only">{title}</span>
-                        </Link>
-                    ))}
-                    <DockDesktopItemSeparator />
-                    <button type="button" onClick={toggleTheme}>
-                        <DockDesktopItem
-                            title="Toggle Theme"
-                            icon={<ThemeIcon className="size-full" />}
+        <Fragment>
+            <FloatingDock>
+                {navigations.map(({ title, href, icon }) => (
+                    <Link key={title} href={href} aria-label={title}>
+                        <DockItem
+                            title={title}
+                            icon={icon}
+                            className={cn(
+                                pathname === href && "ring-2 ring-brand"
+                            )}
                         />
-                        <span className="sr-only">Toggle Theme</span>
-                    </button>
-                </FloatingDockDesktop>
-                <FloatingDockMobile>
-                    {navigations.map(({ title, href, icon }, index) => (
-                        <Link key={title} href={href}>
-                            <DockMobileItem
-                                title={title}
-                                icon={icon}
-                                index={index}
-                                max={navigations.length}
-                                className={cn(
-                                    pathname === href && "border-brand"
-                                )}
-                            />
-                        </Link>
-                    ))}
-                </FloatingDockMobile>
-                <div className="md:hidden">
-                    <button
-                        type="button"
-                        className="flex size-10 items-center justify-center rounded-full border border-border bg-secondary text-secondary-foreground shadow-sm"
-                        onClick={toggleTheme}
-                    >
-                        <ThemeIcon className="size-5" />
-                        <span className="sr-only">Toggle Theme</span>
-                    </button>
-                </div>
-            </div>
-        </div>
+                        <span className="sr-only">{title}</span>
+                    </Link>
+                ))}
+                <DockItemSeparator />
+                <button type="button" onClick={toggleTheme}>
+                    <DockItem
+                        title="Toggle Theme"
+                        icon={<ThemeIcon className="size-full" />}
+                    />
+                    <span className="sr-only">Toggle Theme</span>
+                </button>
+            </FloatingDock>
+            <MobileMenu>
+                {navigations.map(({ title, href }, index) => (
+                    <Link key={title} href={href} aria-label={title}>
+                        <MobileMenuItem
+                            title={title}
+                            index={index}
+                            className={cn(pathname === href && "text-brand")}
+                        />
+                    </Link>
+                ))}
+            </MobileMenu>
+        </Fragment>
     );
 }
