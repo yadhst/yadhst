@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, Suspense } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -76,17 +76,21 @@ export default function Navbar() {
                     <span className="sr-only">Toggle Theme</span>
                 </button>
             </FloatingDock>
-            <MobileMenu>
-                {navigations.map(({ title, href }, index) => (
-                    <Link key={title} href={href} aria-label={title}>
-                        <MobileMenuItem
-                            title={title}
-                            index={index}
-                            className={cn(pathname === href && "text-brand")}
-                        />
-                    </Link>
-                ))}
-            </MobileMenu>
+            <Suspense>
+                <MobileMenu>
+                    {navigations.map(({ title, href }, index) => (
+                        <Link key={title} href={href} aria-label={title}>
+                            <MobileMenuItem
+                                title={title}
+                                index={index}
+                                className={cn(
+                                    pathname === href && "text-brand"
+                                )}
+                            />
+                        </Link>
+                    ))}
+                </MobileMenu>
+            </Suspense>
         </Fragment>
     );
 }
