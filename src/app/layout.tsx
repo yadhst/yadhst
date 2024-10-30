@@ -26,7 +26,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" suppressHydrationWarning>
+        <html lang="en" id="FreePalestine" suppressHydrationWarning>
             <body
                 className={cn(inter.variable, "relative font-sans antialiased")}
             >
