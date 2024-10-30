@@ -1,8 +1,7 @@
 import style from "./style.module.css";
-import { cn } from "@/lib/utils";
 
 const COLOR = "hsl(var(--foreground) / 0.03)";
-const SIZE = "20px";
+const SIZE = "5px";
 export default function GridBlurryBlob() {
     return (
         <div
@@ -12,7 +11,7 @@ export default function GridBlurryBlob() {
                 backgroundSize: `${SIZE} ${SIZE}`,
             }}
         >
-            <div className={cn(style.blurryBlob)}></div>
+            <div className={style.blurryBlob}></div>
         </div>
     );
 }
