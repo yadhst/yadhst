@@ -44,7 +44,6 @@ export default function MessageEditForm() {
                     onKeyUp={(e) => {
                         if (e.key === "Escape") return setEditFormOpened(false);
                     }}
-                    autoFocus
                 />
                 <div className="absolute bottom-1 right-2">
                     <span className="text-xs text-muted-foreground">

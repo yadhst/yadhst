@@ -81,7 +81,6 @@ export default function MessageForm({
                                 return closeReply();
                             }
                         }}
-                        autoFocus
                     />
                     <div className="absolute bottom-1 right-2">
                         <span className="text-xs text-muted-foreground">
