@@ -47,7 +47,7 @@ type DockItemProps = {
     className?: string;
 };
 export function DockItem({ title, icon, className }: DockItemProps) {
-    const ref = useRef<React.ElementRef<"div">>(null);
+    const ref = useRef<React.ComponentRef<"div">>(null);
     const [hovered, setHovered] = useState(false);
     const context = useContext(DockContext)!;
     const distance = useTransform(context.mouseX, (val) => {

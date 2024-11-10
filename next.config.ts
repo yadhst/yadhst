@@ -1,8 +1,8 @@
 import createMDX from "@next/mdx";
 import remarkGfm from "remark-gfm";
+import type { NextConfig } from "next";
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
     pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
     experimental: {
         mdxRs: true,
