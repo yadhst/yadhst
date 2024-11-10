@@ -15,7 +15,7 @@ const links = [
     },
     {
         name: "Discord",
-        href: "https://discord.com/users/1116578460119355402",
+        href: "https://discord.gg/4gf3HMpaMw",
         icon: <ImageIcon src="/icons/brand-icons/discord.svg" />,
     },
     {
