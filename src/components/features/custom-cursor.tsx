@@ -5,12 +5,7 @@ import Image from "next/image";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEventListener } from "usehooks-ts";
 import { encode } from "querystring";
-import {
-    motion,
-    useMotionValue,
-    useSpring,
-    AnimatePresence,
-} from "framer-motion";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 
@@ -21,7 +16,6 @@ const PRESSED_TAIL_SIZE = DEFAULT_TAIL_SIZE * 1.3;
 const THUMBNAIL_WIDTH = 256;
 const THUMBNAIL_HEIGHT = (THUMBNAIL_WIDTH * 9) / 16; // with ratio 16:9
 
-const MotionImage = motion(Image);
 export default function CustomCursor() {
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -42,8 +36,10 @@ export default function CustomCursor() {
         return tailWidth.set(width), tailHeight.set(height);
     }
 
-    /** invalidate tail size on route change to prevent bug */
     useEffect(() => {
+        setThumbnail(null);
+
+        /** invalidate tail size on route change to prevent bug */
         const target = document.elementFromPoint(cursorX.get(), cursorY.get());
         if (target) {
             const invalidatedTailSize = isInteractiveTarget(target)
@@ -136,40 +132,22 @@ export default function CustomCursor() {
                     opacity: cursorOpacity,
                 }}
             >
-                <AnimatePresence>
-                    {!!thumbnail && (
-                        <MotionImage
-                            alt="thumbnail"
-                            src={thumbnail}
-                            width={THUMBNAIL_WIDTH}
-                            height={THUMBNAIL_HEIGHT}
-                            placeholder="blur"
-                            blurDataURL="/images/thumbnail-loading.jpg"
-                            className="pointer-events-none size-full border-border object-cover"
-                            initial={{
-                                opacity: 0,
-                                borderWidth: 0,
-                                borderRadius: "9999px",
-                            }}
-                            animate={{
-                                opacity: 1,
-                                borderWidth: 2,
-                                borderRadius: "calc(var(--radius) - 0.5px)",
-                            }}
-                            exit={{
-                                opacity: 0,
-                                borderWidth: 0,
-                                borderRadius: "9999px",
-                            }}
-                            onError={() =>
-                                setThumbnail(
-                                    (prev) =>
-                                        prev && "/images/thumbnail-error.jpg"
-                                )
-                            }
-                        />
-                    )}
-                </AnimatePresence>
+                {!!thumbnail && (
+                    <Image
+                        alt="thumbnail"
+                        src={thumbnail}
+                        width={THUMBNAIL_WIDTH}
+                        height={THUMBNAIL_HEIGHT}
+                        placeholder="blur"
+                        blurDataURL="/images/thumbnail-loading.jpg"
+                        className="pointer-events-none size-full border-border object-cover"
+                        onError={() =>
+                            setThumbnail(
+                                (prev) => prev && "/images/thumbnail-error.jpg"
+                            )
+                        }
+                    />
+                )}
             </motion.div>
             <motion.div
                 className="pointer-events-none fixed left-0 top-0 z-[9999] hidden -translate-x-1/2 -translate-y-1/2 rounded-full bg-white mix-blend-difference [@media_(pointer:_fine)]:block"
