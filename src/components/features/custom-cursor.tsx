@@ -7,7 +7,7 @@ import { useEventListener } from "usehooks-ts";
 import { encode } from "querystring";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
-import { cn } from "@/lib/utils";
+import { cn, createPreviewLinkURL } from "@/lib/utils";
 
 const DEFAULT_CURSOR_SIZE = 10;
 const DEFAULT_TAIL_SIZE = DEFAULT_CURSOR_SIZE * 4;
@@ -61,7 +61,13 @@ export default function CustomCursor() {
         if (anchorEl) {
             const href = anchorEl.getAttribute("href");
             if (href?.startsWith("http")) {
-                setThumbnail(isOut ? null : createPreviewLinkURL(href));
+                const previewLinkURL = createPreviewLinkURL(
+                    href,
+                    THUMBNAIL_WIDTH * 3,
+                    THUMBNAIL_HEIGHT * 3
+                );
+
+                setThumbnail(isOut ? null : previewLinkURL);
                 return updateTailSize(
                     isOut ? DEFAULT_TAIL_SIZE : THUMBNAIL_WIDTH,
                     isOut ? DEFAULT_TAIL_SIZE : THUMBNAIL_HEIGHT
@@ -175,22 +181,4 @@ function isInteractiveTarget(target: Element) {
 
     const interactiveQuery = interactiveQueries.join(", ");
     return Boolean(target.closest(interactiveQuery));
-}
-
-function createPreviewLinkURL(url: string) {
-    const params = encode({
-        url,
-        screenshot: true,
-        meta: false,
-        waitForTimeout: 8000,
-        embed: "screenshot.url",
-        colorScheme: "dark",
-        ttl: "1d",
-        "viewport.isMobile": true,
-        "viewport.deviceScaleFactor": 1,
-        "viewport.width": THUMBNAIL_WIDTH * 3,
-        "viewport.height": THUMBNAIL_HEIGHT * 3,
-    });
-
-    return `https://api.microlink.io/?${params}`;
 }
