@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 
 import { inter, arizonia } from "@/components/typography/fonts";
+import { METADATA } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import Providers from "./providers";
 import Navbar from "@/components/layouts/navbar";
@@ -13,9 +14,10 @@ import CustomCursor from "@/components/features/custom-cursor";
 
 export function generateMetadata(): Metadata {
     return {
+        ...METADATA,
         title: {
-            default: "Yadhst",
-            template: "%s ─ Yadhst",
+            default: METADATA.title,
+            template: `%s ─ ${METADATA.title}`,
         },
     };
 }
