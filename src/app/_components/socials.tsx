@@ -47,9 +47,12 @@ export default function Socials() {
                         asChild
                     >
                         <Link
-                            href={new URL(href)}
                             target="_blank"
                             rel="noreferrer"
+                            href={new URL(href)}
+                            data-thumbnail-link={
+                                href.startsWith("http") ? href : undefined
+                            }
                         >
                             <span>{icon}</span>
                             <span>{name}</span>

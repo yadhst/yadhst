@@ -68,6 +68,7 @@ export default function ProjectCard({
                             <Link
                                 key={label}
                                 href={href}
+                                data-thumbnail-link={href}
                                 target="_blank"
                                 rel="noreferrer"
                                 className="text-xs font-semibold underline underline-offset-1"

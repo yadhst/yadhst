@@ -19,6 +19,7 @@ import { Crown, ArrowBendUpRight } from "@/components/icons";
 export default function MessageCard() {
     const { message, editFormOpened } = useMessage();
     const { currentUser } = useCurrentUser();
+    const userAvatar = message.user.image ?? "/images/default-avatar.jpeg";
 
     function jumpToReference() {
         const referenceElement = document.getElementById(message.referenceId!);
@@ -70,13 +71,14 @@ export default function MessageCard() {
                 <div className="size-12 flex-none">
                     <Image
                         alt="avatar"
-                        src={
-                            message.user.image ?? "/images/default-avatar.jpeg"
-                        }
                         loading="lazy"
                         className="size-full rounded-lg object-cover"
                         width={48}
                         height={48}
+                        data-thumbnail-width={48 * 3}
+                        data-thumbnail-height={48 * 3}
+                        data-thumbnail-source={userAvatar}
+                        src={userAvatar}
                     />
                 </div>
                 <div className="flex min-w-0 flex-grow flex-col gap-1 text-sm">

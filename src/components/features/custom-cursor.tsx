@@ -4,7 +4,6 @@ import { Fragment, useEffect, useState } from "react";
 import Image from "next/image";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEventListener } from "usehooks-ts";
-import { encode } from "querystring";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
 import { cn, createPreviewLinkURL } from "@/lib/utils";
@@ -36,6 +35,22 @@ export default function CustomCursor() {
         return tailWidth.set(width), tailHeight.set(height);
     }
 
+    function isInteractiveTarget(target: Element) {
+        const interactiveQueries = [
+            "a[href]",
+            "button",
+            "[role='button']",
+            "[data-radix-collection-item]",
+            "[data-state]",
+            "[data-interactive]",
+            "[data-thumbnail-link]",
+            "[data-thumbnail-source]",
+        ];
+
+        const interactiveQuery = interactiveQueries.join(", ");
+        return Boolean(target.closest(interactiveQuery));
+    }
+
     useEffect(() => {
         setThumbnail(null);
 
@@ -57,20 +72,33 @@ export default function CustomCursor() {
         const target = e.target as Element;
         if (!target || !isInteractiveTarget(target)) return;
 
-        const anchorEl = target.closest("a[href]") as HTMLAnchorElement;
-        if (anchorEl) {
-            const href = anchorEl.getAttribute("href");
-            if (href?.startsWith("http")) {
-                const previewLinkURL = createPreviewLinkURL(
-                    href,
-                    THUMBNAIL_WIDTH * 3,
-                    THUMBNAIL_HEIGHT * 3
-                );
+        const thumbnailElement = target.closest(
+            "[data-thumbnail-link],[data-thumbnail-source]"
+        ) as HTMLElement;
 
-                setThumbnail(isOut ? null : previewLinkURL);
+        if (thumbnailElement) {
+            const thumbnailWidth =
+                Number(thumbnailElement.dataset.thumbnailWidth) ||
+                THUMBNAIL_WIDTH;
+
+            const thumbnailHeight =
+                Number(thumbnailElement.dataset.thumbnailHeight) ||
+                THUMBNAIL_HEIGHT;
+
+            const thumbnailSource =
+                thumbnailElement.dataset.thumbnailLink?.startsWith("http")
+                    ? createPreviewLinkURL(
+                          thumbnailElement.dataset.thumbnailLink,
+                          thumbnailWidth * 3,
+                          thumbnailHeight * 3
+                      )
+                    : thumbnailElement.dataset.thumbnailSource;
+
+            if (thumbnailSource?.startsWith("http")) {
+                setThumbnail(isOut ? null : thumbnailSource);
                 return updateTailSize(
-                    isOut ? DEFAULT_TAIL_SIZE : THUMBNAIL_WIDTH,
-                    isOut ? DEFAULT_TAIL_SIZE : THUMBNAIL_HEIGHT
+                    isOut ? DEFAULT_TAIL_SIZE : thumbnailWidth,
+                    isOut ? DEFAULT_TAIL_SIZE : thumbnailHeight
                 );
             }
         }
@@ -128,7 +156,9 @@ export default function CustomCursor() {
             <motion.div
                 className={cn(
                     "pointer-events-none fixed left-0 top-0 z-[9999] hidden -translate-x-1/2 -translate-y-1/2 [@media_(pointer:_fine)]:block",
-                    !thumbnail && "rounded-full bg-white mix-blend-difference"
+                    thumbnail
+                        ? "overflow-hidden rounded-lg"
+                        : "rounded-full bg-white mix-blend-difference"
                 )}
                 style={{
                     width: tailWidth,
@@ -167,18 +197,4 @@ export default function CustomCursor() {
             ></motion.div>
         </Fragment>
     );
-}
-
-function isInteractiveTarget(target: Element) {
-    const interactiveQueries = [
-        "a[href]",
-        "button",
-        "[role='button']",
-        "[data-interactive-cc]",
-        "[data-radix-collection-item]",
-        "[data-state]",
-    ];
-
-    const interactiveQuery = interactiveQueries.join(", ");
-    return Boolean(target.closest(interactiveQuery));
 }
