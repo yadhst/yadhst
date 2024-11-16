@@ -32,7 +32,9 @@ export default function ProjectsPage() {
                     </SectionHeader>
                 </BlurFade>
                 <SectionContent>
-                    <Projects />
+                    <BlurFade delay={0.15 * 2}>
+                        <Projects />
+                    </BlurFade>
                 </SectionContent>
             </Section>
         </SectionContainer>
