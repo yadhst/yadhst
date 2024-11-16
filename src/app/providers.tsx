@@ -23,7 +23,7 @@ export default function Providers({
                 <Toaster richColors closeButton />
                 <ProgressBar
                     height="4px"
-                    color="#6366f1"
+                    color="hsl(var(--primary))"
                     options={{ showSpinner: false }}
                     shallowRouting
                 />

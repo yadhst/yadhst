@@ -33,9 +33,9 @@ export default function MessageCard() {
             behavior: "smooth",
         });
 
-        referenceElement.classList.add("bg-brand/10");
+        referenceElement.classList.add("bg-primary/10");
         setTimeout(() => {
-            referenceElement.classList.remove("bg-brand/10");
+            referenceElement.classList.remove("bg-primary/10");
         }, 800);
     }
 

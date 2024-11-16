@@ -61,7 +61,7 @@ export default function Navbar() {
                             title={title}
                             icon={icon}
                             className={cn(
-                                pathname === href && "ring-2 ring-brand"
+                                pathname === href && "ring-2 ring-primary"
                             )}
                         />
                         <span className="sr-only">{title}</span>
@@ -84,7 +84,7 @@ export default function Navbar() {
                                 title={title}
                                 index={index}
                                 className={cn(
-                                    pathname === href && "text-brand"
+                                    pathname === href && "text-primary"
                                 )}
                             />
                         </Link>

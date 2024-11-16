@@ -35,7 +35,7 @@ export function SectionHeader({
             className={cn(
                 "flex flex-col gap-1",
                 border &&
-                    "after:mt-1 after:h-1.5 after:w-14 after:rounded-full after:bg-brand",
+                    "after:mt-1 after:h-1.5 after:w-14 after:rounded-full after:bg-primary",
                 className
             )}
             {...props}
