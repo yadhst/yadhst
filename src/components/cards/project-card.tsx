@@ -28,7 +28,7 @@ export default function ProjectCard({
         <div
             className={cn(
                 "group relative flex h-96 flex-col justify-between gap-1 overflow-hidden rounded-xl border border-border px-4 py-6",
-                "[box-shadow:0_-200px_80px_-20px_hsl(var(--secondary))_inset]"
+                "[box-shadow:0_-200px_80px_-20px_hsl(var(--background))_inset]"
             )}
         >
             <div className="pointer-events-none absolute inset-0 -z-10">

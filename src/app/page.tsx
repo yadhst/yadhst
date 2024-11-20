@@ -39,7 +39,7 @@ export default function HomePage() {
                     </div>
                     <BlurFade delay={0.15 * 3}>
                         <div className="flex items-center gap-3">
-                            <Button variant="outline" asChild>
+                            <Button variant="secondary" asChild>
                                 <Link href="/about">More About Me</Link>
                             </Button>
                             {/* <Button variant="outline" asChild>
