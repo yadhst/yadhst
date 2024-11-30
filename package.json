@@ -39,6 +39,7 @@
         "react-intersection-observer": "^9.13.0",
         "react-textarea-autosize": "^8.5.3",
         "remark-gfm": "^4.0.0",
+        "sass": "^1.81.0",
         "sharp": "^0.33.5",
         "sonner": "^1.5.0",
         "tailwind-merge": "^2.5.2",
