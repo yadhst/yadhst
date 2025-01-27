@@ -18,7 +18,7 @@ export default function useMessageCacheQuery() {
     const queryClient = useQueryClient();
     const getQueryFilters = useCallback(
         ({ predicate, exact, ...messageFilters }: MessageQueryFilters) => {
-            const filters = { ...messageFilters } as QueryFilters;
+            const filters = { ...messageFilters } as QueryFilters<QueryData>;
             if (predicate) {
                 filters.predicate = (q) => {
                     const data = (q.state.data ?? {}) as QueryData;
