@@ -3,7 +3,7 @@
 import { useRouter, usePathname } from "next/navigation";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 
-import { navigations } from "@/components/layouts/navbar";
+import { NAVIGATIONS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { poppins } from "@/components/typography/fonts";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ export default function NotFoundPage() {
     const router = useRouter();
     const pathname = usePathname();
 
-    const isOnNavigation = navigations.some((n) => n.href === pathname);
+    const isOnNavigation = NAVIGATIONS.some((n) => n.href === pathname);
     const message = isOnNavigation ? "Coming Soon" : "You're lost, aren't you?";
 
     return (

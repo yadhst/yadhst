@@ -1,0 +1,7 @@
+.dock_container {
+    @apply fixed inset-x-0 bottom-4 z-50 hidden justify-center lg:flex;
+
+    .dock {
+        @apply flex h-14 items-end gap-4 rounded-2xl border border-border bg-foreground/5 px-3 py-2 backdrop-blur-xl;
+    }
+}

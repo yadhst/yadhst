@@ -1,0 +1,23 @@
+.mobile_menu {
+    @apply lg:hidden;
+
+    &_container {
+        @apply fixed bottom-4 right-4 z-50;
+
+        .items {
+            @apply flex flex-col-reverse gap-3;
+
+            button {
+                @apply flex size-10 items-center justify-center rounded-full border border-border bg-secondary text-secondary-foreground shadow-sm;
+            }
+        }
+    }
+
+    .hamburger_menu {
+        @apply fixed z-40 flex h-screen w-screen justify-center bg-background/10 px-4 py-24 backdrop-blur-2xl;
+
+        .items {
+            @apply flex flex-col items-center gap-10;
+        }
+    }
+}
