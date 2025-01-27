@@ -35,14 +35,12 @@ export default function RootLayout({
             >
                 <Providers>
                     <Topbar />
-                    <Suspense>
-                        <HamburgerMenu />
-                    </Suspense>
                     <main className="mx-auto h-full min-h-screen w-full min-w-0 px-4 pb-24 pt-16 md:max-w-2xl">
                         {children}
                     </main>
                     <Dock />
                     <Suspense>
+                        <HamburgerMenu />
                         <CustomCursor />
                     </Suspense>
                 </Providers>
