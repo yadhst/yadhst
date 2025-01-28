@@ -11,7 +11,7 @@ import Providers from "./providers";
 import Topbar from "@/components/layouts/topbar";
 import Dock from "@/components/layouts/dock";
 import HamburgerMenu from "@/components/layouts/hamburger-menu";
-import CustomCursor from "@/components/features/custom-cursor";
+import InteractiveCursor from "@/components/overlays/interactive-cursor";
 
 export function generateMetadata(): Metadata {
     return {
@@ -41,7 +41,7 @@ export default function RootLayout({
                     <Dock />
                     <Suspense>
                         <HamburgerMenu />
-                        <CustomCursor />
+                        <InteractiveCursor />
                     </Suspense>
                 </Providers>
             </body>

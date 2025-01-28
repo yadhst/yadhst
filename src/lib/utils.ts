@@ -18,8 +18,9 @@ export function generateRandomString(length: number) {
 
 export function createPreviewLinkURL(
     url: string,
-    viewportWidth: number,
-    viewportHeight: number
+    vw: number,
+    vh: number,
+    colorScheme = "dark"
 ) {
     const params = encode({
         url,
@@ -27,12 +28,12 @@ export function createPreviewLinkURL(
         meta: false,
         waitForTimeout: 8000,
         embed: "screenshot.url",
-        colorScheme: "dark",
+        colorScheme,
         ttl: "1d",
         "viewport.isMobile": true,
         "viewport.deviceScaleFactor": 1,
-        "viewport.width": viewportWidth,
-        "viewport.height": viewportHeight,
+        "viewport.width": vw,
+        "viewport.height": vh,
     });
 
     return `https://api.microlink.io/?${params}`;
