@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import {
     DrawingPinFilledIcon,
     DotsHorizontalIcon,
@@ -12,6 +11,7 @@ import { useMessage } from "../../_contexts/message-context";
 import MessageMenu from "./message-menu";
 import MessageActions from "./message-actions";
 import MessageReplies from "./message-replies";
+import LazyImage from "@/components/utilities/lazy-image";
 import TimeAgo from "@/components/features/time-ago";
 import MessageEditForm from "../message-form/message-edit-form";
 import { Crown, ArrowBendUpRight } from "@/components/icons";
@@ -69,9 +69,8 @@ export default function MessageCard() {
             </div>
             <div className="flex gap-3">
                 <div className="size-12 flex-none">
-                    <Image
+                    <LazyImage
                         alt="avatar"
-                        loading="lazy"
                         className="size-full rounded-lg object-cover"
                         width={48}
                         height={48}

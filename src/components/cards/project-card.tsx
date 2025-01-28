@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 
 import { cn } from "@/lib/utils";
+import LazyImage from "../utilities/lazy-image";
 import { Badge } from "@/components/ui/badge";
 
 type LinkProps = {
@@ -32,14 +32,12 @@ export default function ProjectCard({
             )}
         >
             <div className="pointer-events-none absolute inset-0 -z-10">
-                <Image
+                <LazyImage
                     src={cover}
                     alt="cover"
                     width={400}
                     height={400}
-                    className="size-full object-cover opacity-0 transition-all duration-200 ease-linear group-hover:rotate-1 group-hover:scale-105"
-                    onLoad={(e) => (e.currentTarget.style.opacity = "1")}
-                    onError={(e) => (e.currentTarget.style.opacity = "0")}
+                    className="size-full object-cover transition-all duration-200 ease-linear group-hover:rotate-1 group-hover:scale-105"
                 />
             </div>
             <div className="flex flex-wrap items-center gap-3">

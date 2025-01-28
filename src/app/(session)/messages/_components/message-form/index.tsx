@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { toast } from "sonner";
 import { GearIcon } from "@radix-ui/react-icons";
 
 import { MAX_MESSAGE_CONTENT_LENGTH } from "../../_lib/constants";
 import { useCurrentUser } from "@/contexts/current-user-context";
 import useCreateMessage from "../../_hooks/use-create-message";
+import LazyImage from "@/components/utilities/lazy-image";
 import SignInForm from "../sign-in-form";
 import UserMenu from "./user-menu";
 import TextEditor from "./text-editor";
@@ -50,7 +50,7 @@ export default function MessageForm({
                             <div className="absolute -right-1 -top-1">
                                 <GearIcon className="size-5 text-red-500" />
                             </div>
-                            <Image
+                            <LazyImage
                                 alt="avatar"
                                 src={
                                     currentUser.image ??
