@@ -3,12 +3,22 @@
 import { usePathname } from "next/navigation";
 
 import style from "./style.module.scss";
+import { NAVIGATIONS } from "@/lib/constants";
 import { arizonia } from "@/components/typography/fonts";
 import { cn } from "@/lib/utils";
 
 export default function Topbar() {
     const pathname = usePathname();
-    const path = pathname === "/" ? "home" : pathname.split("/")[1];
+    const isValidRoute = NAVIGATIONS.some(
+        ({ href }) => href !== "/" && pathname.startsWith(href)
+    );
+
+    const path =
+        pathname === "/"
+            ? "home"
+            : !isValidRoute
+              ? "not-found"
+              : pathname.split("/")[1];
 
     return (
         <div className={style.topbar}>
