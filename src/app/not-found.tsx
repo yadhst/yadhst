@@ -16,7 +16,7 @@ export default function NotFoundPage() {
             <div className="space-y-6 text-center">
                 <h1 className="text-8xl font-thin tracking-wider">404</h1>
                 <div className="mx-auto h-px w-16 bg-muted" />
-                <p className="font-light">You're lost, aren't you?</p>
+                <p className="font-light">You&apos;re lost, aren&apos;t you?</p>
             </div>
             <div className="mt-8">
                 <Button

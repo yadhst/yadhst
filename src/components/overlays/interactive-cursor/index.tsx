@@ -61,87 +61,108 @@ export default function InteractiveCursor() {
         (width: number, height: number = width) => {
             return tailWidth.set(width), tailHeight.set(height);
         },
-        []
+        [tailWidth, tailHeight]
     );
 
     /** Event Functions */
-    const handleMouseInOut = useCallback((isOut: boolean, e: MouseEvent) => {
-        if (e.relatedTarget) return;
-        return cursorOpacity.set(isOut ? 0 : 1);
-    }, []);
+    const handleMouseInOut = useCallback(
+        (isOut: boolean, e: MouseEvent) => {
+            if (e.relatedTarget) return;
+            return cursorOpacity.set(isOut ? 0 : 1);
+        },
+        [cursorOpacity]
+    );
 
     const handleMousePress = useCallback(
         (isPressed: boolean, e: MouseEvent) => {
             return tailScale.set(isPressed ? PRESSED_TAIL_SCALE : 1);
         },
-        []
+        [tailScale]
     );
 
-    const handleMouseHover = useCallback((isOut: boolean, e: MouseEvent) => {
-        const target = e.target as Element;
-        if (!target || !isInteractiveTarget(target)) return;
+    const handleMouseHover = useCallback(
+        (isOut: boolean, e: MouseEvent) => {
+            const target = e.target as Element;
+            if (!target || !isInteractiveTarget(target)) return;
 
-        const thumbnailElement = target.closest(
-            "[data-thumbnail-link],[data-thumbnail-source]"
-        ) as HTMLElement;
+            const thumbnailElement = target.closest(
+                "[data-thumbnail-link],[data-thumbnail-source]"
+            ) as HTMLElement;
 
-        if (thumbnailElement) {
-            const thumbnailWidth =
-                Number(thumbnailElement.dataset.thumbnailWidth) ||
-                THUMBNAIL_WIDTH;
+            if (thumbnailElement) {
+                const thumbnailWidth =
+                    Number(thumbnailElement.dataset.thumbnailWidth) ||
+                    THUMBNAIL_WIDTH;
 
-            const thumbnailHeight =
-                Number(thumbnailElement.dataset.thumbnailHeight) ||
-                THUMBNAIL_HEIGHT;
+                const thumbnailHeight =
+                    Number(thumbnailElement.dataset.thumbnailHeight) ||
+                    THUMBNAIL_HEIGHT;
 
-            const thumbnailSource =
-                thumbnailElement.dataset.thumbnailLink?.startsWith("http")
-                    ? createPreviewLinkURL(
-                          thumbnailElement.dataset.thumbnailLink,
-                          thumbnailWidth * 3,
-                          thumbnailHeight * 3
-                      )
-                    : thumbnailElement.dataset.thumbnailSource;
+                const thumbnailSource =
+                    thumbnailElement.dataset.thumbnailLink?.startsWith("http")
+                        ? createPreviewLinkURL(
+                              thumbnailElement.dataset.thumbnailLink,
+                              thumbnailWidth * 3,
+                              thumbnailHeight * 3
+                          )
+                        : thumbnailElement.dataset.thumbnailSource;
 
-            if (thumbnailSource?.startsWith("http")) {
-                setThumbnail(isOut ? null : thumbnailSource);
-                return updateTailSize(
-                    isOut ? DEFAULT_TAIL_SIZE : thumbnailWidth,
-                    isOut ? DEFAULT_TAIL_SIZE : thumbnailHeight
-                );
+                if (thumbnailSource?.startsWith("http")) {
+                    setThumbnail(isOut ? null : thumbnailSource);
+                    return updateTailSize(
+                        isOut ? DEFAULT_TAIL_SIZE : thumbnailWidth,
+                        isOut ? DEFAULT_TAIL_SIZE : thumbnailHeight
+                    );
+                }
             }
-        }
 
-        return updateTailSize(
-            isOut
-                ? DEFAULT_TAIL_SIZE
-                : DEFAULT_TAIL_SIZE * INTERACTIVE_TAIL_SCALE
-        );
-    }, []);
+            return updateTailSize(
+                isOut
+                    ? DEFAULT_TAIL_SIZE
+                    : DEFAULT_TAIL_SIZE * INTERACTIVE_TAIL_SCALE
+            );
+        },
+        [updateTailSize]
+    );
 
     /** Event Handler */
-    const handleMouseMove = useCallback((e: MouseEvent) => {
-        cursorX.set(e.clientX);
-        cursorY.set(e.clientY);
-    }, []);
+    const handleMouseMove = useCallback(
+        (e: MouseEvent) => {
+            cursorX.set(e.clientX);
+            cursorY.set(e.clientY);
+        },
+        [cursorX, cursorY]
+    );
 
-    const handleMouseOver = useCallback((e: MouseEvent) => {
-        handleMouseInOut(false, e);
-        handleMouseHover(false, e);
-    }, []);
+    const handleMouseOver = useCallback(
+        (e: MouseEvent) => {
+            handleMouseInOut(false, e);
+            handleMouseHover(false, e);
+        },
+        [handleMouseHover, handleMouseInOut]
+    );
 
-    const handleMouseOut = useCallback((e: MouseEvent) => {
-        handleMouseInOut(true, e);
-        handleMouseHover(true, e);
-    }, []);
+    const handleMouseOut = useCallback(
+        (e: MouseEvent) => {
+            handleMouseInOut(true, e);
+            handleMouseHover(true, e);
+        },
+        [handleMouseHover, handleMouseInOut]
+    );
 
-    const handleMouseUp = useCallback((e: MouseEvent) => {
-        handleMousePress(false, e);
-    }, []);
+    const handleMouseUp = useCallback(
+        (e: MouseEvent) => {
+            handleMousePress(false, e);
+        },
+        [handleMousePress]
+    );
 
-    const handleMouseDown = useCallback((e: MouseEvent) => {
-        handleMousePress(true, e);
-    }, []);
+    const handleMouseDown = useCallback(
+        (e: MouseEvent) => {
+            handleMousePress(true, e);
+        },
+        [handleMousePress]
+    );
 
     useEventListener("mousemove", handleMouseMove);
     useEventListener("mouseover", handleMouseOver);

@@ -18,6 +18,7 @@ export default function LazyImage({
 
     return (
         <div className={style.image_container}>
+            {/* eslint-disable-next-line jsx-a11y/alt-text */}
             <Image
                 {...props}
                 unoptimized
