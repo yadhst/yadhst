@@ -27,7 +27,7 @@ export default function ProjectCard({
     return (
         <div
             className={cn(
-                "group relative flex h-96 flex-col justify-between gap-1 overflow-hidden rounded-xl border border-border px-4 py-6",
+                "dark group relative flex h-96 flex-col justify-between gap-1 overflow-hidden rounded-xl border border-border px-4 py-6",
                 "[box-shadow:0_-200px_80px_-20px_hsl(var(--background))_inset]"
             )}
         >
@@ -49,7 +49,7 @@ export default function ProjectCard({
             </div>
             <div
                 className={cn(
-                    "flex flex-col gap-5",
+                    "flex flex-col gap-5 text-foreground",
                     !!links?.length &&
                         "lg:translate-y-11 lg:transition-all lg:duration-300 lg:ease-in-out lg:group-hover:translate-y-0"
                 )}
