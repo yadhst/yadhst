@@ -1,18 +1,12 @@
 import { type Metadata } from "next";
 import { IdCardIcon, GearIcon } from "@radix-ui/react-icons";
 
-import BlurFade from "@/components/magicui/blur-fade";
 import AboutMe from "./_components/about-me";
 import Skills from "./_components/skills";
-import {
-    SectionContainer,
-    Section,
-    SectionHeader,
-    SectionContent,
-    SectionTitle,
-    SectionIcon,
-    SectionDescription,
-} from "@/components/layouts/section";
+import SectionContainer from "@/components/sections/section/container";
+import Section from "@/components/sections/section";
+import SectionHeader from "@/components/sections/section/header";
+import SectionContent from "@/components/sections/section/content";
 
 export const metadata: Metadata = {
     title: "About",
@@ -22,38 +16,27 @@ export default function AboutPage() {
     return (
         <SectionContainer>
             <Section>
-                <BlurFade delay={0.15}>
-                    <SectionHeader border>
-                        <SectionTitle icon={<SectionIcon as={IdCardIcon} />}>
-                            About Me
-                        </SectionTitle>
-                        <SectionDescription>
-                            A little about me
-                        </SectionDescription>
-                    </SectionHeader>
-                </BlurFade>
-                <BlurFade delay={0.15 * 2}>
-                    <SectionContent>
-                        <AboutMe />
-                    </SectionContent>
-                </BlurFade>
+                <SectionHeader
+                    title="About Me"
+                    description="A little about me"
+                    icon={<IdCardIcon />}
+                    border
+                />
+
+                <SectionContent>
+                    <AboutMe />
+                </SectionContent>
             </Section>
             <Section>
-                <BlurFade delay={0.15 * 3}>
-                    <SectionHeader border>
-                        <SectionTitle icon={<SectionIcon as={GearIcon} />}>
-                            Tech
-                        </SectionTitle>
-                        <SectionDescription>
-                            What I&apos;m using
-                        </SectionDescription>
-                    </SectionHeader>
-                </BlurFade>
-                <BlurFade delay={0.15 * 4}>
-                    <SectionContent>
-                        <Skills />
-                    </SectionContent>
-                </BlurFade>
+                <SectionHeader
+                    title="Tech Stack"
+                    description="Things I've been working with"
+                    icon={<GearIcon />}
+                    border
+                />
+                <SectionContent>
+                    <Skills />
+                </SectionContent>
             </Section>
         </SectionContainer>
     );
