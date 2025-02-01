@@ -69,7 +69,7 @@ function MotionButton({
     className,
     ...props
 }: MotionButtonProps) {
-    const Comp = motion(asChild ? Slot : "button");
+    const Comp = motion.create(asChild ? Slot : "button");
     return (
         <Comp
             className={cn(buttonVariants({ variant, size, className }))}

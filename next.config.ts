@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
         typedRoutes: true,
     },
     images: {
+        unoptimized: true,
         remotePatterns: [
             {
                 hostname: "skillicons.dev",

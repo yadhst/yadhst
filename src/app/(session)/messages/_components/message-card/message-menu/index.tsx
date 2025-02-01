@@ -16,6 +16,7 @@ import DeleteItem from "./items/delete-item";
 import EditItem from "./items/edit-item";
 import CopyItem from "./items/copy-item";
 import CopyIdItem from "./items/copy-id-item";
+import { Show } from "@/components/utilities/conditional";
 import { SpinnerGap } from "@/components/icons/loading-icons";
 
 const messageMenuItems = [
@@ -91,25 +92,27 @@ export default function MessageMenu({ children }: MessageMenuProps) {
     );
 
     if (message.isOptimistic) return <SpinnerGap className="size-3" />;
-    return !filteredMenuItems.length ? null : (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-                {filteredMenuItems.map(({ id, items }, index) => {
-                    return (
-                        <Fragment key={id}>
-                            <DropdownMenuGroup aria-label={id}>
-                                {items.map((item) => (
-                                    <item.component key={item.id} />
-                                ))}
-                            </DropdownMenuGroup>
-                            {!!filteredMenuItems[index + 1] && (
-                                <DropdownMenuSeparator />
-                            )}
-                        </Fragment>
-                    );
-                })}
-            </DropdownMenuContent>
-        </DropdownMenu>
+    return (
+        <Show when={!!filteredMenuItems.length}>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                    {filteredMenuItems.map(({ id, items }, index) => {
+                        return (
+                            <Fragment key={id}>
+                                <DropdownMenuGroup aria-label={id}>
+                                    {items.map((item) => (
+                                        <item.component key={item.id} />
+                                    ))}
+                                </DropdownMenuGroup>
+                                <Show when={!!filteredMenuItems[index + 1]}>
+                                    <DropdownMenuSeparator />
+                                </Show>
+                            </Fragment>
+                        );
+                    })}
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </Show>
     );
 }

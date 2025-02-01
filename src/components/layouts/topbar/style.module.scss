@@ -1,0 +1,19 @@
+.topbar {
+    @apply fixed inset-x-0 top-0 z-50 border-b border-border bg-background/50 backdrop-blur-md;
+
+    .container {
+        @apply flex items-center justify-center px-2 py-0.5;
+
+        .headline {
+            @apply flex items-center gap-1.5;
+
+            .logo {
+                @apply text-lg leading-snug;
+            }
+
+            .path {
+                @apply cursor-pointer text-sm text-blue-500;
+            }
+        }
+    }
+}

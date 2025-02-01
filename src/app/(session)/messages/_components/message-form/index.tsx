@@ -1,18 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { toast } from "sonner";
 import { GearIcon } from "@radix-ui/react-icons";
 
 import { MAX_MESSAGE_CONTENT_LENGTH } from "../../_lib/constants";
 import { useCurrentUser } from "@/contexts/current-user-context";
 import useCreateMessage from "../../_hooks/use-create-message";
+import LazyImage from "@/components/utilities/lazy-image";
 import SignInForm from "../sign-in-form";
 import UserMenu from "./user-menu";
 import TextEditor from "./text-editor";
 import { SpinnerGap } from "@/components/icons/loading-icons";
 import { MotionButton } from "@/components/ui/button";
+import { Show } from "@/components/utilities/conditional";
 
 type MessageFormProps = {
     referenceId?: string;
@@ -47,10 +48,10 @@ export default function MessageForm({
                 <div className="size-12 flex-none">
                     <UserMenu>
                         <div className="relative size-full cursor-pointer">
-                            <div className="absolute -right-1 -top-1">
+                            <div className="absolute -right-1 -top-1 z-10">
                                 <GearIcon className="size-5 text-red-500" />
                             </div>
-                            <Image
+                            <LazyImage
                                 alt="avatar"
                                 src={
                                     currentUser.image ??
@@ -90,7 +91,7 @@ export default function MessageForm({
                 </div>
             </div>
             <div className="flex justify-end gap-3">
-                {referenceId && closeReply && (
+                <Show when={!!(referenceId && closeReply)}>
                     <MotionButton
                         type="button"
                         size="sm"
@@ -100,15 +101,16 @@ export default function MessageForm({
                     >
                         Cancel
                     </MotionButton>
-                )}
+                </Show>
                 <MotionButton
                     type="button"
                     size="sm"
                     disabled={!canSendMessage}
                     onClick={sendMessage}
                 >
-                    {isPending && <SpinnerGap className="mr-2 size-4" />}
-                    {isPending ? "Sending..." : "Send"}
+                    <Show when={isPending} fallback="Send">
+                        <SpinnerGap className="mr-2 size-4" /> Sending...
+                    </Show>
                 </MotionButton>
             </div>
         </div>

@@ -1,0 +1,15 @@
+.image_container {
+    @apply relative size-full;
+
+    .placeholder {
+        @apply pointer-events-none absolute inset-0 -z-10 flex items-center justify-center;
+
+        &:not(.error) {
+            @apply bg-muted text-muted-foreground;
+        }
+
+        &.error {
+            @apply bg-destructive text-destructive-foreground;
+        }
+    }
+}

@@ -1,0 +1,15 @@
+.cursor {
+    @apply pointer-events-none fixed left-0 top-0 hidden -translate-x-1/2 -translate-y-1/2 [@media_(pointer:_fine)]:block;
+
+    &:not(.tail_thumbnail) {
+        @apply z-[9999] rounded-full bg-white mix-blend-difference;
+    }
+
+    &.tail_thumbnail {
+        @apply z-[9998] overflow-hidden rounded-lg ring ring-ring;
+    }
+
+    .thumbnail_image {
+        @apply pointer-events-none size-full object-cover;
+    }
+}

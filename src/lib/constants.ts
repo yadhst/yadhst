@@ -54,3 +54,22 @@ export const METADATA: MetadataData = {
         images: [METADATA_MEDIA_IMAGE],
     },
 };
+
+export const NAVIGATIONS = [
+    {
+        title: "Home",
+        href: "/",
+    },
+    {
+        title: "About",
+        href: "/about",
+    },
+    {
+        title: "Projects",
+        href: "/projects",
+    },
+    {
+        title: "Messages",
+        href: "/messages",
+    },
+] as const;

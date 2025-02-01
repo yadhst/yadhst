@@ -8,6 +8,7 @@ import { MESSAGE_QUERY_KEYS } from "../_lib/constants";
 import { sortMessages } from "../_lib/utils";
 import { getMessagesByPage } from "../_actions/message";
 import Message from "./message-card/message";
+import { Show } from "@/components/utilities/conditional";
 import { SpinnerGap } from "@/components/icons/loading-icons";
 
 export default function MessageList() {
@@ -53,11 +54,11 @@ export default function MessageList() {
             {currentMessages.map((message) => (
                 <Message key={message.id} message={message} />
             ))}
-            {hasNextPage && (
+            <Show when={hasNextPage}>
                 <div ref={ref} className="w-full">
                     <MessageListLoader />
                 </div>
-            )}
+            </Show>
         </div>
     );
 }

@@ -1,0 +1,24 @@
+.section_header {
+    @apply space-y-1;
+
+    &.with_border::after {
+        content: "";
+        @apply mt-2 block h-1 w-16 rounded-full bg-primary;
+    }
+
+    .label {
+        @apply flex items-center gap-2;
+
+        .title {
+            @apply text-lg font-semibold;
+        }
+
+        svg {
+            @apply size-5;
+        }
+    }
+
+    .description {
+        @apply text-sm text-muted-foreground;
+    }
+}

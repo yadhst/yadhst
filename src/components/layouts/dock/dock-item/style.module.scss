@@ -1,0 +1,15 @@
+.dock_item {
+    @apply relative flex aspect-square items-center justify-center rounded-xl border border-border bg-background text-foreground;
+
+    .title {
+        @apply absolute -top-8 left-1/2 w-fit -translate-x-1/2 whitespace-pre rounded border border-border bg-background px-2 py-0.5 text-xs text-foreground/70;
+    }
+
+    .icon {
+        @apply flex items-center justify-center;
+    }
+
+    .active_indicator {
+        @apply absolute -bottom-1.5 size-1 rounded-full bg-primary;
+    }
+}
