@@ -6,6 +6,7 @@ import Image, { type ImageProps } from "next/image";
 import style from "./style.module.scss";
 import { cn } from "@/lib/utils";
 import { SpinnerBall } from "@/components/icons/loading-icons";
+import { Show } from "@/components/utilities/conditional";
 
 type LazyImageProps = Omit<ImageProps, "unoptimized" | "loading">;
 export default function LazyImage({
@@ -32,15 +33,16 @@ export default function LazyImage({
                     setIsError(true);
                 }}
             />
-            {!isLoaded && (
+            <Show when={!isLoaded}>
                 <div className={cn(style.placeholder, isError && style.error)}>
-                    {isError ? (
+                    <Show
+                        when={isError}
+                        fallback={<SpinnerBall className="size-8" />}
+                    >
                         <span className="text-sm">Failed to Load Image</span>
-                    ) : (
-                        <SpinnerBall className="size-8" />
-                    )}
+                    </Show>
                 </div>
-            )}
+            </Show>
         </div>
     );
 }

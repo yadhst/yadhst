@@ -10,6 +10,7 @@ import { useMessage } from "../../../_contexts/message-context";
 import Message from "../message";
 import { SpinnerGap } from "@/components/icons/loading-icons";
 import { Button } from "@/components/ui/button";
+import { Show } from "@/components/utilities/conditional";
 
 export default function ReplyList() {
     const { message } = useMessage();
@@ -65,19 +66,21 @@ export default function ReplyList() {
                     <Message key={message.id} message={message} />
                 ))}
             </div>
-            {totalMessages > currentMessages.length && (
+            <Show when={totalMessages > currentMessages.length}>
                 <Button
                     type="button"
                     size="sm"
                     disabled={isFetching}
                     onClick={handleFetch}
                 >
-                    {isFetching && <SpinnerGap className="mr-2 size-4" />}
-                    {isFetching
-                        ? "Loading..."
-                        : `Show ${totalMessages - currentMessages.length} replies`}
+                    <Show
+                        when={isFetching}
+                        fallback={`Show ${totalMessages - currentMessages.length} replies`}
+                    >
+                        <SpinnerGap className="mr-2 size-4" /> Loading...
+                    </Show>
                 </Button>
-            )}
+            </Show>
         </div>
     );
 }

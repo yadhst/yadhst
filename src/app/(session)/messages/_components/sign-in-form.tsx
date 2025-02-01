@@ -4,6 +4,7 @@ import { useTransition } from "react";
 import Image from "next/image";
 
 import { login } from "../../_actions/session";
+import { Show } from "@/components/utilities/conditional";
 import { SpinnerGap } from "@/components/icons/loading-icons";
 import { MotionButton } from "@/components/ui/button";
 
@@ -45,8 +46,9 @@ export default function SignInForm() {
                     disabled={isPending}
                     onClick={handleLogin}
                 >
-                    {isPending && <SpinnerGap className="mr-2 size-4" />}
-                    {isPending ? "Signing In..." : "Sign In"}
+                    <Show when={isPending} fallback="Sign In">
+                        <SpinnerGap className="mr-2 size-4" /> Signing In...
+                    </Show>
                 </MotionButton>
             </div>
         </div>

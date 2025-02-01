@@ -9,6 +9,7 @@ import {
 
 import style from "./style.module.scss";
 import { cn } from "@/lib/utils";
+import { Show } from "@/components/utilities/conditional";
 
 const HOVERED_ICON_SIZE_TO_ADD = 40;
 
@@ -91,7 +92,7 @@ export default function DockItem({
             className={cn(style.dock_item, className)}
         >
             <AnimatePresence>
-                {hovered && (
+                <Show key={`${hovered}`} when={hovered}>
                     <motion.div
                         initial={{ opacity: 0, y: 10, x: "-50%" }}
                         animate={{ opacity: 1, y: 0, x: "-50%" }}
@@ -100,7 +101,7 @@ export default function DockItem({
                     >
                         {title}
                     </motion.div>
-                )}
+                </Show>
             </AnimatePresence>
             <motion.div
                 style={{ width: widthIcon, height: heightIcon }}
@@ -108,7 +109,7 @@ export default function DockItem({
             >
                 {icon}
             </motion.div>
-            {isActive && (
+            <Show when={!!isActive}>
                 <motion.div
                     layoutId="dock-active"
                     className={style.active_indicator}
@@ -118,7 +119,7 @@ export default function DockItem({
                         damping: 10,
                     }}
                 />
-            )}
+            </Show>
         </motion.div>
     );
 }

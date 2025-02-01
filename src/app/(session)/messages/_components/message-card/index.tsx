@@ -14,6 +14,7 @@ import MessageReplies from "./message-replies";
 import LazyImage from "@/components/utilities/lazy-image";
 import TimeAgo from "@/components/features/time-ago";
 import MessageEditForm from "../message-form/message-edit-form";
+import { Show } from "@/components/utilities/conditional";
 import { Crown, ArrowBendUpRight } from "@/components/icons";
 
 export default function MessageCard() {
@@ -45,7 +46,7 @@ export default function MessageCard() {
             className="flex flex-col gap-1.5 rounded-sm transition duration-150 ease-linear"
         >
             <div className="flex items-center gap-1.5 empty:hidden">
-                {!!message.pinnedAt && (
+                <Show when={!!message.pinnedAt}>
                     <div className="dot-separator flex items-center gap-1 text-xs text-muted-foreground">
                         <DrawingPinFilledIcon className="size-3" />
                         <span>
@@ -54,8 +55,8 @@ export default function MessageCard() {
                                 : "Pinned Message"}
                         </span>
                     </div>
-                )}
-                {!!message.reference && (
+                </Show>
+                <Show when={!!message.reference}>
                     <button
                         type="button"
                         title="Jump to Reference"
@@ -63,9 +64,9 @@ export default function MessageCard() {
                         onClick={jumpToReference}
                     >
                         <ArrowBendUpRight className="size-3" />
-                        <span>Replied to {message.reference.user.name}</span>
+                        <span>Replied to {message.reference?.user.name}</span>
                     </button>
-                )}
+                </Show>
             </div>
             <div className="flex gap-3">
                 <div className="size-12 flex-none">
@@ -89,11 +90,11 @@ export default function MessageCard() {
                                         {message.user.name}
                                     </span>
                                 </div>
-                                {message.user.isAdmin && (
+                                <Show when={!!message.user.isAdmin}>
                                     <div className="flex gap-1">
                                         <Crown className="size-3 text-yellow-500" />
                                     </div>
-                                )}
+                                </Show>
                             </div>
                             <div className="flex items-center">
                                 <TimeAgo
@@ -114,11 +115,14 @@ export default function MessageCard() {
                     </div>
                     <div className="flex flex-col gap-2 max-md:-ml-[60px] max-md:mt-4">
                         <div>
-                            {editFormOpened &&
-                            !!currentUser &&
-                            !message.isDeleting ? (
-                                <MessageEditForm />
-                            ) : (
+                            <Show
+                                when={
+                                    !editFormOpened ||
+                                    !currentUser ||
+                                    message.isDeleting
+                                }
+                                fallback={<MessageEditForm />}
+                            >
                                 <p
                                     className={cn(
                                         "whitespace-pre-wrap text-sm transition duration-150 ease-linear",
@@ -128,12 +132,16 @@ export default function MessageCard() {
                                 >
                                     {message.content}
                                 </p>
-                            )}
+                            </Show>
                         </div>
                         <div>
-                            {!(message.isTemporary || message.isDeleting) && (
+                            <Show
+                                when={
+                                    !(message.isTemporary || message.isDeleting)
+                                }
+                            >
                                 <MessageActions />
-                            )}
+                            </Show>
                             <div
                                 className={cn(
                                     message.referenceId && "md:-ml-[60px]"

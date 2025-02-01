@@ -9,6 +9,7 @@ import { useMessage } from "../../_contexts/message-context";
 import TextEditor from "./text-editor";
 import { SpinnerGap } from "@/components/icons/loading-icons";
 import { MotionButton } from "@/components/ui/button";
+import { Show } from "@/components/utilities/conditional";
 
 export default function MessageEditForm() {
     const { message, setEditFormOpened } = useMessage();
@@ -65,8 +66,9 @@ export default function MessageEditForm() {
                     disabled={!canUpdate}
                     onClick={handleUpdate}
                 >
-                    {isPending && <SpinnerGap className="mr-2 size-4" />}
-                    {isPending ? "Updating..." : "Update"}
+                    <Show when={isPending} fallback="Update">
+                        <SpinnerGap className="mr-2 size-4" /> Updating...
+                    </Show>
                 </MotionButton>
             </div>
         </div>

@@ -14,6 +14,7 @@ import { menuTransition } from "./config";
 import { cn } from "@/lib/utils";
 import MenuItem from "./menu-item";
 import ThemeIcon from "@/components/icons/theme-icon";
+import { Show } from "@/components/utilities/conditional";
 
 const menuVariants = {
     open: {
@@ -31,7 +32,7 @@ export default function HamburgerMenu() {
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
-    const [open, setOpen] = useState(false);
+    const [opened, setOpened] = useState(false);
     const { resolvedTheme, setTheme } = useTheme();
 
     function toggleTheme() {
@@ -39,7 +40,7 @@ export default function HamburgerMenu() {
     }
 
     useEffect(() => {
-        setOpen(false);
+        setOpened(false);
     }, [pathname, searchParams]);
 
     return (
@@ -49,12 +50,12 @@ export default function HamburgerMenu() {
                     <motion.button
                         type="button"
                         initial={{ rotate: 0 }}
-                        animate={{ rotate: open ? 135 : 0 }}
+                        animate={{ rotate: opened ? 135 : 0 }}
                         transition={{
                             ...menuTransition,
-                            delay: open ? 0 : 0.4,
+                            delay: opened ? 0 : 0.4,
                         }}
-                        onClick={() => setOpen((prev) => !prev)}
+                        onClick={() => setOpened((prev) => !prev)}
                     >
                         <RxTokens className="size-5" />
                         <span className="sr-only">Toggle Navigation</span>
@@ -68,12 +69,12 @@ export default function HamburgerMenu() {
             <motion.nav
                 className={style.hamburger_menu}
                 variants={menuVariants}
-                animate={open ? "open" : "closed"}
+                animate={opened ? "open" : "closed"}
                 initial="closed"
                 transition={menuTransition}
             >
                 <AnimatePresence>
-                    {open && (
+                    <Show key={`${opened}`} when={opened}>
                         <div className={style.items}>
                             {NAVIGATIONS.map(({ title, href }, index) => (
                                 <Link
@@ -91,7 +92,7 @@ export default function HamburgerMenu() {
                                 </Link>
                             ))}
                         </div>
-                    )}
+                    </Show>
                 </AnimatePresence>
             </motion.nav>
         </div>

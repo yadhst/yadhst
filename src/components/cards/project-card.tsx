@@ -3,8 +3,9 @@
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
-import LazyImage from "../utilities/lazy-image";
+import LazyImage from "@/components/utilities/lazy-image";
 import { Badge } from "@/components/ui/badge";
+import { Show } from "@/components/utilities/conditional";
 
 type LinkProps = {
     label: string;
@@ -22,7 +23,7 @@ export default function ProjectCard({
     description,
     cover,
     tags,
-    links,
+    links = [],
 }: ProjectProps) {
     return (
         <div
@@ -50,7 +51,7 @@ export default function ProjectCard({
             <div
                 className={cn(
                     "flex flex-col gap-5 text-foreground",
-                    !!links?.length &&
+                    !!links.length &&
                         "lg:translate-y-11 lg:transition-all lg:duration-300 lg:ease-in-out lg:group-hover:translate-y-0"
                 )}
             >
@@ -60,7 +61,7 @@ export default function ProjectCard({
                         {description}
                     </p>
                 </div>
-                {!!links?.length && (
+                <Show when={!!links.length}>
                     <div className="flex flex-wrap items-center gap-5">
                         {links.map(({ label, href }) => (
                             <Link
@@ -75,7 +76,7 @@ export default function ProjectCard({
                             </Link>
                         ))}
                     </div>
-                )}
+                </Show>
             </div>
         </div>
     );

@@ -8,6 +8,7 @@ import { useEventListener } from "usehooks-ts";
 import style from "./style.module.scss";
 import { cn, createPreviewLinkURL } from "@/lib/utils";
 import LazyImage from "@/components/utilities/lazy-image";
+import { Show } from "@/components/utilities/conditional";
 
 const SMOOTH_TRANSITION = { mass: 0.5, stiffness: 300, damping: 20 };
 const CURSOR_SIZE = 10;
@@ -199,15 +200,15 @@ export default function InteractiveCursor() {
                     `translate(var(--tw-translate-x), var(--tw-translate-y)) scale(${scale})`
                 }
             >
-                {!!thumbnail && (
+                <Show when={!!thumbnail}>
                     <LazyImage
                         alt="thumbnail"
-                        src={thumbnail}
+                        src={thumbnail!}
                         width={THUMBNAIL_WIDTH}
                         height={THUMBNAIL_HEIGHT}
                         className={style.thumbnail_image}
                     />
-                )}
+                </Show>
             </motion.div>
         </Fragment>
     );
